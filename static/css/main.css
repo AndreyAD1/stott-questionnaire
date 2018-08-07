@@ -1,0 +1,17 @@
+.description_title {
+  font-size: 18pt;
+  font: bold;
+}
+
+footer {
+  background: #1D3b21;
+  color: #ededed;
+}
+
+header {
+  background: #4f955c;
+  color: #ededed;
+  font-size: 24pt;
+}
+
+
