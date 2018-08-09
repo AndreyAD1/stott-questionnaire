@@ -1,0 +1,18 @@
+{% extends "_base.html" %}
+{% block content %}
+  <div class="container">
+    <div class="row">
+      <div class="col-12">Инструкция по заполнению</div>
+      <div class="col-12 text-center">{{ page_content.item_title }}</div>
+      <div class="col-12 text-center">{{ page_content.subitem }}</div>
+      {% for feature in page_content.feature_list %}
+        <div class="col-12">{{ feature }}</div>
+      {% endfor %}
+    </div>
+    <div class="ml-auto mr-auto">
+      <a class="btn btn-primary btn-lg continue-button" href="{{ next_page_number }}.html" role="button" aria-disabled="true">
+        Продолжить
+      </a>
+    </div>
+  </div>
+{% endblock %}
