@@ -30,12 +30,12 @@ def render_question_pages(jinja_environment, items):
     template = jinja_environment.get_template('_questions.html')
     for subitem_number, subitem in enumerate(items):
         if subitem_number != len(items) - 1:
-            next_page_number = subitem_number + 1
+            next_page_filename = '{}.html'.format(subitem_number + 1)
         else:
-            next_page_number = 'result'
+            next_page_filename = 'result.html'
         question_html_page = template.render(
             page_content=subitem,
-            next_page_number=next_page_number
+            next_page_filename=next_page_filename
         )
         question_page_filename = '{}.html'.format(subitem_number)
         question_page_filepath = join('static', question_page_filename)
