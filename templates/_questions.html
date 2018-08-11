@@ -1,12 +1,13 @@
 {% extends "_base.html" %}
+{% block title %}Признаки{% endblock %}
 {% block content %}
-  <div class="container">
+  <div class="container question-item">
     <div class="row">
       <div class="col-12">
-        <a href="instructions.html">Инструкция по заполнению</a>
+        <a href="instruction.html" target="_blank">Инструкция по заполнению</a>
       </div>
-      <div class="col-12 text-center">{{ page_content.item_title }}</div>
-      <div class="col-12 text-center">{{ page_content.subitem }}</div>
+      <div class="col-12 title text-center mb-1">{{ page_content.item_title }}</div>
+      <div class="col-12 subtitle text-center mb-1">{{ page_content.subitem }}</div>
       <div class="col-12">
         <form>
         {% for feature in page_content.feature_list %}
@@ -19,7 +20,11 @@
         {% endfor %}
         </form>
       </div>
-      <div class="ml-auto mr-auto">
+    </div>
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="ml-auto mr-auto mt-1">
         <a class="btn btn-primary btn-lg" href="{{ next_page_filename }}" role="button">
           Продолжить
         </a>

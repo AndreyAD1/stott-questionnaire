@@ -4,12 +4,11 @@ import json
 from os.path import join
 
 
-def render_pages_without_variables(jinja_environment):
-    page_name_list = ['index.html', 'person_info.html']
-    for page_name in page_name_list:
-        template = jinja_environment.get_template(page_name)
-        page_html = template.render()
-        page_filepath = join('static', page_name)
+def render_pages_without_variables(jinja_environment, page_list):
+    for page in page_list:
+        template = jinja_environment.get_template(page['page_name'])
+        page_html = template.render(page_title=page['page_title'])
+        page_filepath = join('static', page['page_name'])
         with open(page_filepath, 'w', encoding='utf-8') as page_file:
             page_file.write(page_html)
 
@@ -23,7 +22,7 @@ def load_questions_and_items():
 def render_question_pages(jinja_environment, items):
     template = jinja_environment.get_template('_questions.html')
     for subitem_number, subitem in enumerate(items):
-        if subitem_number != len(items) - 1:
+        if subitem_number < len(items) - 1:
             next_page_filename = '{}.html'.format(subitem_number + 1)
         if subitem_number == len(items) - 1:
             next_page_filename = 'result.html'
@@ -31,8 +30,8 @@ def render_question_pages(jinja_environment, items):
             page_content=subitem,
             next_page_filename=next_page_filename
         )
-        question_page_filename = '{}.html'.format(subitem_number)
-        question_page_filepath = join('static', question_page_filename)
+        page_filename = '{}.html'.format(subitem_number)
+        question_page_filepath = join('static', page_filename)
         with open(question_page_filepath, 'w') as question_file:
             question_file.write(question_html_page)
 
@@ -46,9 +45,17 @@ def render_result_page(jinja_environment):
 
 
 def render_site():
+    pages_without_vatiables = [
+        {'page_name': 'index.html', 'page_title': 'Главная'},
+        {
+            'page_name': 'person_info.html',
+            'page_title': 'Информация об обследуемом'
+        },
+        {'page_name': 'instruction.html', 'page_title': 'Инструкция'}
+    ]
     questions_and_items = load_questions_and_items()
     env = Environment(loader=FileSystemLoader('templates/'))
-    render_pages_without_variables(env)
+    render_pages_without_variables(env, pages_without_vatiables)
     render_question_pages(env, questions_and_items)
     render_result_page(env)
 

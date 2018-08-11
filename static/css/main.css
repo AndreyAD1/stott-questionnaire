@@ -1,6 +1,10 @@
-.description_title {
+.title {
   font-size: 18pt;
   font: bold;
+}
+
+.subtitle {
+  font-size: 15pt;
 }
 
 footer {
@@ -14,4 +18,9 @@ header {
   font-size: 24pt;
 }
 
+@media (min-height: 700px) {
+  .question-item {
+    min-height: 500px
+  }
+}
 
