@@ -4,20 +4,14 @@ import json
 from os.path import join
 
 
-def render_main_page(jinja_environment):
-    template = jinja_environment.get_template('index.html')
-    index_html = template.render()
-    index_filepath = join('static', 'index.html')
-    with open(index_filepath, 'w', encoding='utf-8') as index_file:
-        index_file.write(index_html)
-
-
-def render_person_info_page(jinja_environment):
-    template = jinja_environment.get_template('person_info.html')
-    person_info_html = template.render()
-    person_info_filepath = join('static', 'person_info.html')
-    with open(person_info_filepath, 'w') as person_file:
-        person_file.write(person_info_html)
+def render_pages_without_variables(jinja_environment):
+    page_name_list = ['index.html', 'person_info.html']
+    for page_name in page_name_list:
+        template = jinja_environment.get_template(page_name)
+        page_html = template.render()
+        page_filepath = join('static', page_name)
+        with open(page_filepath, 'w', encoding='utf-8') as page_file:
+            page_file.write(page_html)
 
 
 def load_questions_and_items():
@@ -31,7 +25,7 @@ def render_question_pages(jinja_environment, items):
     for subitem_number, subitem in enumerate(items):
         if subitem_number != len(items) - 1:
             next_page_filename = '{}.html'.format(subitem_number + 1)
-        else:
+        if subitem_number == len(items) - 1:
             next_page_filename = 'result.html'
         question_html_page = template.render(
             page_content=subitem,
@@ -54,8 +48,7 @@ def render_result_page(jinja_environment):
 def render_site():
     questions_and_items = load_questions_and_items()
     env = Environment(loader=FileSystemLoader('templates/'))
-    render_main_page(env)
-    render_person_info_page(env)
+    render_pages_without_variables(env)
     render_question_pages(env, questions_and_items)
     render_result_page(env)
 
