@@ -6,6 +6,7 @@
       <div class="col-12">
         <a href="instruction.html" target="_blank">Инструкция по заполнению</a>
       </div>
+
       <div class="col-12 title text-center mb-1">{{ page_content.item_title }}</div>
       <div class="col-12 subtitle text-center mb-1">{{ page_content.subitem }}</div>
       <div class="col-12">
@@ -20,10 +21,14 @@
         {% endfor %}
         </form>
       </div>
+
     </div>
   </div>
   <div class="container">
     <div class="row">
+      <div class="col-12 text-center">
+        Страница {{ page_number }} из {{ total_page_number }}
+      </div>
       <div class="ml-auto mr-auto mt-1">
         <a class="btn btn-primary btn-lg" href="{{ next_page_filename }}" role="button">
           Продолжить

@@ -21,16 +21,20 @@ def load_questions_and_items():
 
 def render_question_pages(jinja_environment, items):
     template = jinja_environment.get_template('_questions.html')
-    for subitem_number, subitem in enumerate(items):
-        if subitem_number < len(items) - 1:
-            next_page_filename = '{}.html'.format(subitem_number + 1)
-        if subitem_number == len(items) - 1:
+    for subitem_index, subitem in enumerate(items):
+        page_number = subitem_index + 1
+        total_page_number = len(items)
+        if page_number < total_page_number:
+            next_page_filename = '{}.html'.format(page_number + 1)
+        if page_number == total_page_number:
             next_page_filename = 'result.html'
         question_html_page = template.render(
             page_content=subitem,
-            next_page_filename=next_page_filename
+            next_page_filename=next_page_filename,
+            page_number=page_number,
+            total_page_number=total_page_number
         )
-        page_filename = '{}.html'.format(subitem_number)
+        page_filename = '{}.html'.format(page_number)
         question_page_filepath = join('static', page_filename)
         with open(question_page_filepath, 'w') as question_file:
             question_file.write(question_html_page)
