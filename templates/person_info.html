@@ -7,7 +7,7 @@
         Информация об обследуемом
       </div>
       <div class="col-12">
-        <form name="person_info">
+        <form action="questions" method="POST" name="person_info" id="question-form">
           <div class="form-group">
             <label for="age">Возраст:</label>
             <input
@@ -65,9 +65,15 @@
         </form>
       </div>
       <div class="ml-auto mr-auto">
-        <a class="btn btn-primary btn-lg disabled continue-button" href="1.html" role="button" aria-disabled="true">Продолжить</a>
+        <input
+          class="btn btn-primary btn-lg disabled continue-button"
+          type="submit"
+          value="Продолжить"
+          form="question-form"
+          aria-disabled="true"
+        >
       </div>
     </div>
   </div>
-  <script src="js/check_continue_button.js"></script>
+  <script src="static/js/check_continue_button.js"></script>
 {% endblock %}
