@@ -1,9 +1,11 @@
-from flask import Flask, render_template, request
-from site_render import load_questions_and_items
+from flask import Flask, render_template
+import json
 
 
 application = Flask(__name__)
 application.config.update(ENV='development', DEBUG=True)
+with open('items.json', 'r', encoding='utf-8') as item_file:
+    item_list = json.load(item_file)
 
 
 @application.route('/')
@@ -20,19 +22,22 @@ def person_info():
 
 
 @application.route('/questions/<item_num>', methods=['POST'])
-def questions(item_num):
-    item_list = load_questions_and_items()
-    subitem = item_list[int(item_num) - 1]
-    total_page_number = len(item_list)
+def questions_and_result(item_num):
     page_number = int(item_num)
-    next_page_number = int(item_num) + 1
-    return render_template(
-            '_questions.html',
-            page_content=subitem,
-            page_number=page_number,
-            total_page_number=total_page_number,
-            next_page_number=next_page_number
-        )
+    if page_number <= len(item_list):
+        item_index = page_number - 1
+        subitem = item_list[item_index]
+        total_page_number = len(item_list)
+        next_page_number = page_number + 1
+        return render_template(
+                '_questions.html',
+                page_content=subitem,
+                page_number=page_number,
+                total_page_number=total_page_number,
+                next_page_number=next_page_number
+            )
+    if page_number > len(item_list):
+        return render_template('result.html')
 
 
 if __name__ == '__main__':
