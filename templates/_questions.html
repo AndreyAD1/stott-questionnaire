@@ -10,7 +10,7 @@
       <div class="col-12 title text-center mb-1">{{ page_content.item_title }}</div>
       <div class="col-12 subtitle text-center mb-1">{{ page_content.subitem }}</div>
       <div class="col-12">
-        <form>
+        <form action="{{ next_page_number }}" id="question-form" method="post">
         {% for feature in page_content.feature_list %}
         <div class="form-check">
           <input class="form-check-input" type="checkbox" value="" id="{{ feature }}">
@@ -30,9 +30,13 @@
         Страница {{ page_number }} из {{ total_page_number }}
       </div>
       <div class="ml-auto mr-auto mt-1">
-        <a class="btn btn-primary btn-lg" href="{{ next_page_filename }}" role="button">
-          Продолжить
-        </a>
+        <input
+          class="btn btn-primary btn-lg continue-button"
+          type="submit"
+          value="Продолжить"
+          form="question-form"
+          aria-disabled="true"
+        >
       </div>
     </div>
   </div>

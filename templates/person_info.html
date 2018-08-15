@@ -7,23 +7,15 @@
         Информация об обследуемом
       </div>
       <div class="col-12">
-        <form action="questions" method="POST" name="person_info" id="question-form">
+        <form action="questions/1" method="POST" name="person_info" id="question-form">
           <div class="form-group">
             <label for="age">Возраст:</label>
-            <input
-              type="number"
-              class="form-control"
-              id="age"
-              min=1
-              max=100
-              step=1
-              placeholder="Введите возраст обследуемого (количество полных лет)"
-              required
-            >
+            <input type="number" name="age" class="form-control" id="age" min=1 max=100 step=1
+                   placeholder="Введите возраст обследуемого (количество полных лет)" required>
           </div>
           <div class="mt-2">Пол:</div>
           <div class="form-check">
-            <input name="sex" type="radio" value="male" id="male" class="form-check-input male">
+            <input name="sex" type="radio" value="male" id="male" class="form-check-input male" required>
             <label class="form-check-label" for="male">Мужской</label>
           </div>
           <div class="form-check">
@@ -35,6 +27,7 @@
             <input
               type="number"
               class="form-control"
+              name="grade"
               id="grade"
               min="1"
               max="20"
@@ -60,13 +53,13 @@
             <label for="conflict-history">
               Если Вам известна история конфликта в семье ученика, приведите краткое описание:
             </label>
-            <textarea class="form-control" id="conflict-history" rows="5"></textarea>
+            <textarea class="form-control" id="conflict-history" rows="5" name="family_history"></textarea>
           </div>
         </form>
       </div>
       <div class="ml-auto mr-auto">
         <input
-          class="btn btn-primary btn-lg disabled continue-button"
+          class="btn btn-primary btn-lg continue-button"
           type="submit"
           value="Продолжить"
           form="question-form"
@@ -75,5 +68,4 @@
       </div>
     </div>
   </div>
-  <script src="static/js/check_continue_button.js"></script>
 {% endblock %}
