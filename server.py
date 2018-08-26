@@ -1,6 +1,13 @@
 from flask import Flask, render_template, request
 import json
-from database import add_child_info_to_database
+from database import (
+    add_person_to_database,
+    add_behavioral_disorder_symptoms,
+    add_person_aptitudes
+)
+
+
+
 
 
 application = Flask(__name__)
@@ -23,16 +30,20 @@ def person_info():
     )
 
 
-@application.route('/questions/<item_num>', methods=['POST'])
-def questions_and_result(item_num):
+@application.route('/questions/<number_of_symptom_complex>', methods=['POST'])
+def questions_and_result(number_of_symptom_complex):
     print(request.form)
-    page_number = int(item_num)
-    if page_number == 1:
-        age = int(request.form['age'])
-        sex = request.form['sex']
-        grade_number = int(request.form['grade'])
-        add_child_info_to_database(age, sex, grade_number)
+    page_number = int(number_of_symptom_complex)
     if page_number <= len(item_list):
+        if page_number == 1:
+            age = int(request.form['age'])
+            sex = request.form['sex']
+            grade_number = int(request.form['grade'])
+            add_person_to_database(age, sex, grade_number)
+        if 1 < page_number <= 16:
+            add_behavioral_disorder_symptoms()
+        if page_number > 16:
+            add_person_aptitudes()
         item_index = page_number - 1
         subitem = item_list[item_index]
         total_page_number = len(item_list)

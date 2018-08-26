@@ -35,10 +35,18 @@ def create_database():
     Base.metadata.create_all(engine)
 
 
-def add_child_info_to_database(age, sex, grade_number):
+def add_person_to_database(age, sex, grade_number):
     child = Child(age=age, sex=sex, grade_number=grade_number)
     session.add(child)
     return
+
+
+def add_behavioral_disorder_symptoms():
+    pass
+
+
+def add_person_aptitudes():
+    pass
 
 
 if __name__ == '__main__':
