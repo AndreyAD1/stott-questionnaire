@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy.orm import sessionmaker
 
 
 engine = create_engine('sqlite:///questionnaire.db')
@@ -10,7 +10,7 @@ session = Session()
 Base = declarative_base()
 
 
-class Respondent(Base):
+class Child(Base):
     __tablename__ = 'respondents'
     id = Column(Integer, primary_key=True)
     age = Column(Integer)
@@ -23,7 +23,7 @@ class Respondent(Base):
         self.grade_number = grade_number
 
     def __repr__(self):
-        return '<Respondent {} {} {}>'.format(self.id, self.age, self.sex)
+        return '<Child {} {} {}>'.format(self.id, self.age, self.sex)
 
 
 def create_database():
