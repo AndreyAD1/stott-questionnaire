@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 import json
+from database import add_child_info_to_database
 
 
 application = Flask(__name__)
@@ -26,6 +27,11 @@ def person_info():
 def questions_and_result(item_num):
     print(request.form)
     page_number = int(item_num)
+    if page_number == 1:
+        age = int(request.form['age'])
+        sex = request.form['sex']
+        grade_number = int(request.form['grade'])
+        add_child_info_to_database(age, sex, grade_number)
     if page_number <= len(item_list):
         item_index = page_number - 1
         subitem = item_list[item_index]

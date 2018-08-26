@@ -23,11 +23,22 @@ class Child(Base):
         self.grade_number = grade_number
 
     def __repr__(self):
-        return '<Child {} {} {}>'.format(self.id, self.age, self.sex)
+        return '<Child id={} age={} sex={} grade_number={}>'.format(
+            self.id,
+            self.age,
+            self.sex,
+            self.grade_number
+        )
 
 
 def create_database():
     Base.metadata.create_all(engine)
+
+
+def add_child_info_to_database(age, sex, grade_number):
+    child = Child(age=age, sex=sex, grade_number=grade_number)
+    session.add(child)
+    return
 
 
 if __name__ == '__main__':
