@@ -7,14 +7,10 @@ from database import (
 )
 
 
-
-
-
 application = Flask(__name__)
 application.config.update(ENV='development', DEBUG=True)
 with open('items.json', 'r', encoding='utf-8') as item_file:
     item_list = json.load(item_file)
-
 
 
 @application.route('/')
