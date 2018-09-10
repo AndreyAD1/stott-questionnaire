@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 
@@ -13,7 +13,7 @@ Base = declarative_base()
 class Person(Base):
     __tablename__ = 'person'
     id = Column(Integer, primary_key=True)
-    person_info = relationship('PersonInfo')
+    person_info = relationship('PersonInfo', back_populates="person")
 
     def __repr__(self):
         return '<Person id={}>'.format(self.id)
@@ -22,10 +22,17 @@ class Person(Base):
 class PersonInfo(Base):
     __tablename__ = 'person_info'
     id = Column(Integer, primary_key=True)
+    person_id = Column(Integer, ForeignKey('person.id'))
     age = Column(Integer)
     sex = Column(String(10))
     grade_number = Column(Integer)
-    person_id = Column(Integer, ForeignKey('person.id'))
+
+    person = relationship('Person', back_populates='person_info')
+    symptoms = relationship(
+        'Symptoms',
+        uselist=False,
+        back_populates="person_info"
+    )
 
     def __repr__(self):
         return '<Person_info id={} age={} sex={} grade_number={}>'.format(
@@ -36,17 +43,31 @@ class PersonInfo(Base):
         )
 
 
-class SymptomsOfAnxietyAboutAdults(Base):
-    __tablename__ = 'anxiety_about_adults'
+class Symptoms(Base):
+    __tablename__ = 'symptoms'
     id = Column(Integer, primary_key=True)
-    person_id = Column(Integer, ForeignKey('person.id'))
-    symptom_1 = Column(String(200))
-    symptom_2 = Column(String(200))
-    symptom_3 = Column(String(200))
-    symptom_4 = Column(String(200))
-    symptom_5 = Column(String(200))
-    symptom_6 = Column(String(200))
-    symptom_7 = Column(String(200))
+    person_info_id = Column(Integer, ForeignKey('person_info.id'))
+
+    person_info = relationship('PersonInfo', back_populates='symptoms')
+
+    symptom_1_1_1_1 = Column(Boolean())
+    symptom_1_1_1_2 = Column(Boolean())
+    symptom_1_1_1_3 = Column(Boolean())
+    symptom_1_1_1_4 = Column(Boolean())
+    symptom_1_1_1_5 = Column(Boolean())
+    symptom_1_1_1_6 = Column(Boolean())
+    symptom_1_1_1_7 = Column(Boolean())
+    symptom_1_1_1_8 = Column(Boolean())
+    symptom_1_1_1_9 = Column(Boolean())
+    symptom_1_1_1_10 = Column(Boolean())
+
+    symptom_1_1_2_1 = Column(Boolean())
+    symptom_1_1_2_2 = Column(Boolean())
+    symptom_1_1_2_3 = Column(Boolean())
+    symptom_1_1_2_4 = Column(Boolean())
+    symptom_1_1_2_5 = Column(Boolean())
+    symptom_1_1_2_6 = Column(Boolean())
+    symptom_1_1_2_7 = Column(Boolean())
 
 
 def create_database():
@@ -65,37 +86,30 @@ def add_person_to_database(age, sex, grade_number):
     )
     session.add(person_info)
     print(session.query(PersonInfo).all())
-    # print(person, person.person_info)
+    session.commit()
     return person.id
 
 
 def add_behavioral_disorder_symptoms(
-    person_id,
-    input_data,
-    symptom_1=None,
-    symptom_2=None,
-    symptom_3=None,
-    symptom_4=None,
-    symptom_5=None,
-    symptom_6=None,
-    symptom_7=None
+    person_info_id,
+    input_symptoms
 ):
-    for symptom_name in input_data.keys():
-        print(symptom_name)
-    # symptoms_of_anxiety_about_adults = SymptomsOfAnxietyAboutAdults(
-    #     person_id=person.id,
-    #     symptom_1=symptom_1,
-    #     symptom_2=symptom_2,
-    #     symptom_3=symptom_3,
-    #     symptom_4=symptom_4,
-    #     symptom_5=symptom_5,
-    #     symptom_6=symptom_6,
-    #     symptom_7=symptom_7
-    # )
-    # session.add(symptoms_of_anxiety_about_adults)
-    # print(session.query(SymptomsOfAnxietyAboutAdults).all())
+    symptoms_list = Symptoms.__table__.columns.keys()
+    matched_symptoms = {}
+    for symptom_name in input_symptoms.keys():
+        if symptom_name in symptoms_list:
+            matched_symptoms[symptom_name] = True
 
-    print(person_id)
+    symptoms = Symptoms(
+        person_info_id=person_info_id,
+        **matched_symptoms
+    )
+    print(symptoms)
+    # session.add(symptoms)
+    # # session.commit()
+    #
+    # print(session.query(Symptoms).all())
+
     return
 
 
