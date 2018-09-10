@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session
 import json
 from database import (
     add_person_to_database,
@@ -8,9 +8,10 @@ from database import (
 
 
 application = Flask(__name__)
+application.secret_key = 'SECRET_KEY'
 application.config.update(ENV='development', DEBUG=True)
-with open('items.json', 'r', encoding='utf-8') as item_file:
-    item_list = json.load(item_file)
+with open('symptoms.json', 'r', encoding='utf-8') as symptom_file:
+    symptom_list = json.load(symptom_file)
 
 
 @application.route('/')
@@ -30,28 +31,32 @@ def person_info():
 def questions_and_result(number_of_symptom_complex):
     print(request.form)
     page_number = int(number_of_symptom_complex)
-    if page_number <= len(item_list):
+    if page_number <= len(symptom_list):
         if page_number == 1:
             age = int(request.form['age'])
             sex = request.form['sex']
             grade_number = int(request.form['grade'])
-            add_person_to_database(age, sex, grade_number)
+            person_id = add_person_to_database(age, sex, grade_number)
+            session['person_id'] = person_id
         if 1 < page_number <= 16:
-            add_behavioral_disorder_symptoms()
+            add_behavioral_disorder_symptoms(
+                session['person_id'],
+                request.form
+            )
         if page_number > 16:
             add_person_aptitudes()
-        item_index = page_number - 1
-        subitem = item_list[item_index]
-        total_page_number = len(item_list)
+        symptom_index = page_number - 1
+        symptom_complex = symptom_list[symptom_index]
+        total_page_number = len(symptom_list)
         next_page_name = page_number + 1
         return render_template(
                 '_questions.html',
-                page_content=subitem,
+                page_content=symptom_complex,
                 page_number=page_number,
                 total_page_number=total_page_number,
                 next_page_number=next_page_name
             )
-    if page_number > len(item_list):
+    if page_number > len(symptom_list):
         return render_template('result.html')
 
 

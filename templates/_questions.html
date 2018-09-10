@@ -7,15 +7,18 @@
         <a href="instruction.html" target="_blank">Инструкция по заполнению</a>
       </div>
 
-      <div class="col-12 title text-center mb-1">{{ page_content.item_title }}</div>
-      <div class="col-12 subtitle text-center mb-1">{{ page_content.subitem }}</div>
+      <div class="col-12 title text-center mb-1">{{ page_content.syndrome }}</div>
+      {% if page_content.symptom_complex %}
+        <div class="col-12 title text-center mb-1">{{ page_content.symptom_complex }}</div>
+      {% endif %}
+      <div class="col-12 subtitle text-center mb-1">{{ page_content.symptom_subcomplex }}</div>
       <div class="col-12">
         <form action="{{ next_page_number }}" id="question-form" method="POST">
-        {% for feature in page_content.feature_list %}
+        {% for symptom_num, symptom_name in page_content.symptom_list %}
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="true" id="{{ feature }}" name="{{ feature }}">
-            <label class="form-check-label" for="{{ feature }}">
-              {{ feature }}
+            <input class="form-check-input" type="checkbox" value="true" id="{{ symptom_num }}" name="{{ symptom_num }}">
+            <label class="form-check-label" for="{{ symptom_num }}">
+              {{ symptom_name }}
             </label>
           </div>
         {% endfor %}
