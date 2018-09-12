@@ -1,16 +1,15 @@
-from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, String, ForeignKey, Boolean
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy.orm import relationship
+from flask_sqlalchemy import SQLAlchemy
+from flask import Flask
 
 
-engine = create_engine('sqlite:///questionnaire.db')
-Session = sessionmaker(bind=engine)
-session = Session()
-Base = declarative_base()
+application = Flask(__name__)
+application.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///questionnaire.db'
+database = SQLAlchemy(application)
 
 
-class Person(Base):
+class Person(database.Model):
     __tablename__ = 'person'
     id = Column(Integer, primary_key=True)
     person_info = relationship('PersonInfo', back_populates="person")
@@ -19,7 +18,7 @@ class Person(Base):
         return '<Person id={}>'.format(self.id)
 
 
-class PersonInfo(Base):
+class PersonInfo(database.Model):
     __tablename__ = 'person_info'
     id = Column(Integer, primary_key=True)
     person_id = Column(Integer, ForeignKey('person.id'))
@@ -43,7 +42,7 @@ class PersonInfo(Base):
         )
 
 
-class Symptoms(Base):
+class Symptoms(database.Model):
     __tablename__ = 'symptoms'
     id = Column(Integer, primary_key=True)
     person_info_id = Column(Integer, ForeignKey('person_info.id'))
@@ -69,24 +68,32 @@ class Symptoms(Base):
     symptom_1_1_2_6 = Column(Boolean())
     symptom_1_1_2_7 = Column(Boolean())
 
+    def __repr__(self):
+        return '<Symptoms id={} person_info_id={} person_info={} symptom={}>'.format(
+            self.id,
+            self.person_info_id,
+            self.person_info,
+            self.symptom_1_1_1_1
+        )
+
 
 def create_database():
-    Base.metadata.create_all(engine)
+    database.create_all()
 
 
 def add_person_to_database(age, sex, grade_number):
     person = Person()
-    session.add(person)
-    session.commit()
+    database.session.add(person)
+    database.session.commit()
     person_info = PersonInfo(
         person_id=person.id,
         age=age,
         sex=sex,
         grade_number=grade_number
     )
-    session.add(person_info)
-    print(session.query(PersonInfo).all())
-    session.commit()
+    database.session.add(person_info)
+    print(database.session.query(PersonInfo).all())
+    database.session.commit()
     return person.id
 
 
@@ -104,11 +111,10 @@ def add_behavioral_disorder_symptoms(
         person_info_id=person_info_id,
         **matched_symptoms
     )
-    print(symptoms)
-    # session.add(symptoms)
-    # # session.commit()
-    #
-    # print(session.query(Symptoms).all())
+    database.session.add(symptoms)
+    database.session.commit()
+
+    print(database.session.query(Symptoms).all())
 
     return
 

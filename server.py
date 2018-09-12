@@ -1,13 +1,13 @@
-from flask import Flask, render_template, request, session
+from flask import render_template, request, session
 import json
 from database import (
+    application,
     add_person_to_database,
     add_behavioral_disorder_symptoms,
     add_person_aptitudes
 )
 
 
-application = Flask(__name__)
 application.secret_key = 'SECRET_KEY'
 application.config.update(ENV='development', DEBUG=True)
 with open('symptoms.json', 'r', encoding='utf-8') as symptom_file:
