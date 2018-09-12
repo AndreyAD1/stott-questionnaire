@@ -29,7 +29,6 @@ def person_info():
 
 @application.route('/questions/<number_of_symptom_complex>', methods=['POST'])
 def questions_and_result(number_of_symptom_complex):
-    print(request.form)
     page_number = int(number_of_symptom_complex)
     if page_number <= len(symptom_list):
         if page_number == 1:

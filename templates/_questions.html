@@ -8,10 +8,10 @@
       </div>
 
       <div class="col-12 title text-center mb-1">{{ page_content.syndrome }}</div>
-      {% if page_content.symptom_complex %}
-        <div class="col-12 title text-center mb-1">{{ page_content.symptom_complex }}</div>
+      <div class="col-12 subtitle text-center mb-1">{{ page_content.symptom_complex }}</div>
+      {% if page_content.symptom_subcomplex %}
+        <div class="col-12 subtitle text-center mb-1">{{ page_content.symptom_subcomplex }}</div>
       {% endif %}
-      <div class="col-12 subtitle text-center mb-1">{{ page_content.symptom_subcomplex }}</div>
       <div class="col-12">
         <form action="{{ next_page_number }}" id="question-form" method="POST">
         {% for symptom_num, symptom_name in page_content.symptom_list %}
