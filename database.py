@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects import postgresql
+from sqlalchemy.orm.attributes import flag_modified
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 
@@ -92,6 +93,7 @@ def add_behavioral_disorder_symptoms(person_info_id, input_symptoms):
         symptoms_row.symptoms = []
     for input_symptom_name in input_symptoms.keys():
         symptoms_row.symptoms.append(input_symptom_name)
+    flag_modified(symptoms_row, 'symptoms')
     db.session.commit()
     return
 
