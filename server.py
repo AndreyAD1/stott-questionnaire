@@ -35,11 +35,11 @@ def questions_and_result(number_of_symptom_complex):
             age = int(request.form['age'])
             sex = request.form['sex']
             grade_number = int(request.form['grade'])
-            person_id = add_person_to_database(age, sex, grade_number)
-            session['person_id'] = person_id
+            person_info_id = add_person_to_database(age, sex, grade_number)
+            session['person_info_id'] = person_info_id
         if 1 < page_number <= 16:
             add_behavioral_disorder_symptoms(
-                session['person_id'],
+                session['person_info_id'],
                 request.form
             )
         if page_number > 16:

@@ -1,15 +1,19 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Boolean
+from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
+from sqlalchemy.dialects import postgresql
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 
 
 application = Flask(__name__)
-application.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///questionnaire.db'
-database = SQLAlchemy(application)
+application.config[
+    'SQLALCHEMY_DATABASE_URI'
+] = 'postgresql://stott:stott@localhost/stott_questionnaire'
+application.config['SQLALCHEMY_ECHO'] = True
+db = SQLAlchemy(application)
 
 
-class Person(database.Model):
+class Person(db.Model):
     __tablename__ = 'person'
     id = Column(Integer, primary_key=True)
     person_info = relationship('PersonInfo', back_populates="person")
@@ -18,7 +22,7 @@ class Person(database.Model):
         return '<Person id={}>'.format(self.id)
 
 
-class PersonInfo(database.Model):
+class PersonInfo(db.Model):
     __tablename__ = 'person_info'
     id = Column(Integer, primary_key=True)
     person_id = Column(Integer, ForeignKey('person.id'))
@@ -42,35 +46,16 @@ class PersonInfo(database.Model):
         )
 
 
-class Symptoms(database.Model):
+class Symptoms(db.Model):
     __tablename__ = 'symptoms'
     id = Column(Integer, primary_key=True)
     person_info_id = Column(Integer, ForeignKey('person_info.id'))
+    symptoms = Column(postgresql.ARRAY(String))
 
     person_info = relationship('PersonInfo', back_populates='symptoms')
 
-    symptom_1_1_1_1 = Column(Boolean())
-    symptom_1_1_1_2 = Column(Boolean())
-    symptom_1_1_1_3 = Column(Boolean())
-    symptom_1_1_1_4 = Column(Boolean())
-    symptom_1_1_1_5 = Column(Boolean())
-    symptom_1_1_1_6 = Column(Boolean())
-    symptom_1_1_1_7 = Column(Boolean())
-    symptom_1_1_1_8 = Column(Boolean())
-    symptom_1_1_1_9 = Column(Boolean())
-    symptom_1_1_1_10 = Column(Boolean())
-
-    symptom_1_1_2_1 = Column(Boolean())
-    symptom_1_1_2_2 = Column(Boolean())
-    symptom_1_1_2_3 = Column(Boolean())
-    symptom_1_1_2_4 = Column(Boolean())
-    symptom_1_1_2_5 = Column(Boolean())
-    symptom_1_1_2_6 = Column(Boolean())
-    symptom_1_1_2_7 = Column(Boolean())
-
     def __repr__(self):
-        return '<Symptoms id={} person_info_id={} person_info={} symptom={}>'.format(
-            self.id,
+        return '<Symptoms person_info_id={} person_info={} symptom={}>'.format(
             self.person_info_id,
             self.person_info,
             self.symptom_1_1_1_1
@@ -78,44 +63,36 @@ class Symptoms(database.Model):
 
 
 def create_database():
-    database.create_all()
+    db.create_all()
 
 
 def add_person_to_database(age, sex, grade_number):
     person = Person()
-    database.session.add(person)
-    database.session.commit()
+    db.session.add(person)
+    db.session.commit()
     person_info = PersonInfo(
         person_id=person.id,
         age=age,
         sex=sex,
         grade_number=grade_number
     )
-    database.session.add(person_info)
-    print(database.session.query(PersonInfo).all())
-    database.session.commit()
-    return person.id
+    db.session.add(person_info)
+    db.session.commit()
+    symptoms = Symptoms(person_info_id=person_info.id)
+    db.session.add(symptoms)
+    db.session.commit()
+    return person_info.id
 
 
-def add_behavioral_disorder_symptoms(
-    person_info_id,
-    input_symptoms
-):
-    symptoms_list = Symptoms.__table__.columns.keys()
-    matched_symptoms = {}
-    for symptom_name in input_symptoms.keys():
-        if symptom_name in symptoms_list:
-            matched_symptoms[symptom_name] = True
-
-    symptoms = Symptoms(
-        person_info_id=person_info_id,
-        **matched_symptoms
-    )
-    database.session.add(symptoms)
-    database.session.commit()
-
-    print(database.session.query(Symptoms).all())
-
+def add_behavioral_disorder_symptoms(person_info_id, input_symptoms):
+    symptoms_row = Symptoms.query.filter(
+        Symptoms.person_info_id == person_info_id
+    ).first()
+    if symptoms_row.symptoms is None:
+        symptoms_row.symptoms = []
+    for input_symptom_name in input_symptoms.keys():
+        symptoms_row.symptoms.append(input_symptom_name)
+    db.session.commit()
     return
 
 
