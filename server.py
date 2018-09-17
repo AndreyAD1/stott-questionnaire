@@ -3,9 +3,15 @@ import json
 from database import (
     application,
     add_person_to_database,
-    add_behavioral_disorder_symptoms,
-    add_person_aptitudes
+    add_symptoms_to_database,
+    add_aptitudes_to_database
 )
+
+
+FIRST_FORM_PAGE = 1
+FIRST_APTITUDE_PAGE = 17
+TOTAL_NUM_OF_FORM_PAGES = 18
+RESULT_PAGE = 19
 
 
 application.secret_key = 'SECRET_KEY'
@@ -30,32 +36,40 @@ def person_info():
 @application.route('/questions/<number_of_symptom_complex>', methods=['POST'])
 def questions_and_result(number_of_symptom_complex):
     page_number = int(number_of_symptom_complex)
-    if page_number <= len(symptom_list):
-        if page_number == 1:
-            age = int(request.form['age'])
-            sex = request.form['sex']
-            grade_number = int(request.form['grade'])
-            person_info_id = add_person_to_database(age, sex, grade_number)
-            session['person_info_id'] = person_info_id
-        if 1 < page_number <= 16:
-            add_behavioral_disorder_symptoms(
-                session['person_info_id'],
-                request.form
-            )
-        if page_number > 16:
-            add_person_aptitudes()
+    if page_number == FIRST_FORM_PAGE:
+        age = int(request.form['age'])
+        sex = request.form['sex']
+        grade_number = int(request.form['grade'])
+        person_info_id = add_person_to_database(age, sex, grade_number)
+        session['person_info_id'] = person_info_id
+        session['symptom_list'] = []
+        session['aptitudes'] = []
+    if FIRST_FORM_PAGE < page_number <= FIRST_APTITUDE_PAGE:
+        input_symptoms = request.form.keys()
+        for input_symptom in input_symptoms:
+            session['symptom_list'].append(input_symptom)
+            session.modified = True
+    if page_number > FIRST_APTITUDE_PAGE:
+        input_aptitudes = request.form.keys()
+        for aptitude in input_aptitudes:
+            session['aptitudes'].append(aptitude)
+            session.modified = True
+    if page_number < RESULT_PAGE:
         symptom_index = page_number - 1
         symptom_complex = symptom_list[symptom_index]
-        total_page_number = len(symptom_list)
         next_page_name = page_number + 1
         return render_template(
                 '_questions.html',
                 page_content=symptom_complex,
                 page_number=page_number,
-                total_page_number=total_page_number,
+                total_page_number=TOTAL_NUM_OF_FORM_PAGES,
                 next_page_number=next_page_name
             )
-    if page_number > len(symptom_list):
+    if page_number == RESULT_PAGE:
+        add_symptoms_to_database(
+            session['person_info_id'],
+            session['symptom_list']
+        )
         return render_template('result.html')
 
 

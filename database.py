@@ -79,26 +79,17 @@ def add_person_to_database(age, sex, grade_number):
     )
     db.session.add(person_info)
     db.session.commit()
-    symptoms = Symptoms(person_info_id=person_info.id)
-    db.session.add(symptoms)
-    db.session.commit()
     return person_info.id
 
 
-def add_behavioral_disorder_symptoms(person_info_id, input_symptoms):
-    symptoms_row = Symptoms.query.filter(
-        Symptoms.person_info_id == person_info_id
-    ).first()
-    if symptoms_row.symptoms is None:
-        symptoms_row.symptoms = []
-    for input_symptom_name in input_symptoms.keys():
-        symptoms_row.symptoms.append(input_symptom_name)
-    flag_modified(symptoms_row, 'symptoms')
+def add_symptoms_to_database(person_info_id, symptom_list):
+    symptoms = Symptoms(person_info_id=person_info_id, symptoms=symptom_list)
+    db.session.add(symptoms)
     db.session.commit()
     return
 
 
-def add_person_aptitudes():
+def add_aptitudes_to_database():
     pass
 
 
