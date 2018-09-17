@@ -43,7 +43,7 @@ def questions_and_result(number_of_symptom_complex):
         person_info_id = add_person_to_database(age, sex, grade_number)
         session['person_info_id'] = person_info_id
         session['symptom_list'] = []
-        session['aptitudes'] = []
+        session['aptitude_list'] = []
     if FIRST_FORM_PAGE < page_number <= FIRST_APTITUDE_PAGE:
         input_symptoms = request.form.keys()
         for input_symptom in input_symptoms:
@@ -52,7 +52,7 @@ def questions_and_result(number_of_symptom_complex):
     if page_number > FIRST_APTITUDE_PAGE:
         input_aptitudes = request.form.keys()
         for aptitude in input_aptitudes:
-            session['aptitudes'].append(aptitude)
+            session['aptitude_list'].append(aptitude)
             session.modified = True
     if page_number < RESULT_PAGE:
         symptom_index = page_number - 1
@@ -69,6 +69,10 @@ def questions_and_result(number_of_symptom_complex):
         add_symptoms_to_database(
             session['person_info_id'],
             session['symptom_list']
+        )
+        add_aptitudes_to_database(
+            session['person_info_id'],
+            session['aptitude_list']
         )
         return render_template('result.html')
 

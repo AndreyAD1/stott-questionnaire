@@ -1,7 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects import postgresql
-from sqlalchemy.orm.attributes import flag_modified
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 
@@ -30,10 +29,14 @@ class PersonInfo(db.Model):
     age = Column(Integer)
     sex = Column(String(10))
     grade_number = Column(Integer)
-
     person = relationship('Person', back_populates='person_info')
     symptoms = relationship(
         'Symptoms',
+        uselist=False,
+        back_populates="person_info"
+    )
+    aptitudes = relationship(
+        'Aptitudes',
         uselist=False,
         back_populates="person_info"
     )
@@ -52,14 +55,28 @@ class Symptoms(db.Model):
     id = Column(Integer, primary_key=True)
     person_info_id = Column(Integer, ForeignKey('person_info.id'))
     symptoms = Column(postgresql.ARRAY(String))
-
     person_info = relationship('PersonInfo', back_populates='symptoms')
 
     def __repr__(self):
-        return '<Symptoms person_info_id={} person_info={} symptom={}>'.format(
+        return '<Symptoms person_info_id={} person_info={} symptoms={}>'.format(
             self.person_info_id,
             self.person_info,
-            self.symptom_1_1_1_1
+            self.symptoms
+        )
+
+
+class Aptitudes(db.Model):
+    __tablename__ = 'aptitudes'
+    id = Column(Integer, primary_key=True)
+    person_info_id = Column(Integer, ForeignKey('person_info.id'))
+    aptitudes = Column(postgresql.ARRAY(String))
+    person_info = relationship('PersonInfo', back_populates='aptitudes')
+
+    def __repr__(self):
+        return '<Aptitudes person_info_id={} person_info={} aptitudes={}>'.format(
+            self.person_info_id,
+            self.person_info,
+            self.aptitudes
         )
 
 
@@ -89,8 +106,11 @@ def add_symptoms_to_database(person_info_id, symptom_list):
     return
 
 
-def add_aptitudes_to_database():
-    pass
+def add_aptitudes_to_database(person_info_id, aptitude_list):
+    aptitudes = Aptitudes(person_info_id=person_info_id, aptitudes=aptitude_list)
+    db.session.add(aptitudes)
+    db.session.commit()
+    return
 
 
 if __name__ == '__main__':
