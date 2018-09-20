@@ -113,5 +113,19 @@ def add_aptitudes_to_database(person_info_id, aptitude_list):
     return
 
 
+def get_symptoms_from_database(person_info_id):
+    symptom_row = db.session.query(Symptoms).filter(
+        Symptoms.person_info_id == person_info_id
+    ).first()
+    return symptom_row.symptoms
+
+
+def get_aptitudes_from_database(person_info_id):
+    aptitude_row = db.session.query(Aptitudes).filter(
+        Aptitudes.person_info_id == person_info_id
+    ).first()
+    return aptitude_row.aptitudes
+
+
 if __name__ == '__main__':
     create_database()

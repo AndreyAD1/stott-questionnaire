@@ -14,7 +14,7 @@ def render_pages_without_variables(jinja_environment, page_list):
 
 
 def load_questions_and_items():
-    with open('items.json', 'r', encoding='utf-8') as item_file:
+    with open('symptoms.json', 'r', encoding='utf-8') as item_file:
         items_json = json.load(item_file)
     return items_json
 
