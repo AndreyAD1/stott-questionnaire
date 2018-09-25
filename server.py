@@ -77,11 +77,19 @@ def questions_and_result(number_of_symptom_complex):
             session['person_info_id'],
             session['aptitude_list']
         )
-        matched_symptoms = get_symptoms_from_database(session['person_info_id'])
-        aptitudes = get_aptitudes_from_database(session['person_info_id'])
-        print(get_points_per_symptom_complex(symptom_list, matched_symptoms))
+        matched_symptoms = get_symptoms_from_database(
+            session['person_info_id']
+        )
+        aptitudes = get_aptitudes_from_database(
+            session['person_info_id']
+        )
+        symptom_scores = get_points_per_symptom_complex(
+            symptom_list,
+            matched_symptoms
+        )
+        print(symptom_scores)
         print(aptitudes)
-        return render_template('result.html')
+        return render_template('result.html', symptom_scores=symptom_scores)
 
 
 if __name__ == '__main__':
