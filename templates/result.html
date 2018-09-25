@@ -87,6 +87,15 @@
         </tr>
       </table>
     </div>
+    <div class="col-12 text-center subtitle">Ресурсы развития</div>
+    <div class="col-12 text-left">
+      <b>Школьные предметы, в которых ученик успешен, a также его увлечения, таланты, хобби:</b>
+      {% if aptitudes %}
+        {% for aptitude in aptitudes %}
+          {{ aptitude }}{% if not loop.last -%},{% else -%}.{% endif %}
+        {% endfor %}
+      {% endif %}
+    </div>
     <div class="col-12 text-center">
       <a class="btn btn-success btn-lg" href="/" role="button">Вернуться на главную страницу</a>
     </div>

@@ -49,6 +49,25 @@ def get_points_per_symptom_complex(
     return points_per_symptom_complex
 
 
+def get_symptom_name(symptom_num, symptom_complex):
+    for symptom_features in symptom_complex['symptom_list']:
+        if symptom_num in symptom_features:
+            symptom_name = symptom_features[1]
+            return symptom_name
+    return None
+
+
+def get_aptitude_names(symptom_list, aptitude_numbers) -> list:
+    aptitude_names = []
+    for aptitude_number in aptitude_numbers:
+        for symptom_complex in symptom_list:
+            aptitude_name = get_symptom_name(aptitude_number, symptom_complex)
+            if aptitude_name:
+                aptitude_name = aptitude_name.lower()
+                aptitude_names.append(aptitude_name)
+    return aptitude_names
+
+
 if __name__ == '__main__':
     with open('symptoms.json', 'r', encoding='utf-8') as symptom_file:
         symptom_list = json.load(symptom_file)
@@ -58,8 +77,16 @@ if __name__ == '__main__':
         'symptom_1_1_2_1',
         'symptom_4_2_2_1'
     ]
+    aptitude_list = [
+        'symptom_5_1_9',
+        'symptom_5_1_3',
+        'symptom_5_1_11',
+        'symptom_5_1_4'
+    ]
     points = get_points_per_symptom_complex(
         symptom_list,
         matched_symptoms_list
     )
+    aptitudes = get_aptitude_names(symptom_list, aptitude_list)
     print(points)
+    print(aptitudes)
