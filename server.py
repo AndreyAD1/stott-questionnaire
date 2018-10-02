@@ -8,7 +8,7 @@ from database import (
     get_symptoms_from_database,
     get_aptitudes_from_database
 )
-from get_results import get_points_per_symptom_complex, get_aptitude_names
+from get_results import get_points_per_symptom_complex, format_aptitude_names
 
 
 FIRST_FORM_PAGE = 1
@@ -80,18 +80,18 @@ def questions_and_result(number_of_symptom_complex):
         matched_symptoms = get_symptoms_from_database(
             session['person_info_id']
         )
-        aptitude_numbers = get_aptitudes_from_database(
+        matched_aptitudes = get_aptitudes_from_database(
             session['person_info_id']
         )
         symptom_scores = get_points_per_symptom_complex(
             symptom_list,
             matched_symptoms
         )
-        aptitude_names = get_aptitude_names(symptom_list, aptitude_numbers)
+        formatted_aptitudes = format_aptitude_names(matched_aptitudes)
         return render_template(
             'result.html',
             symptom_scores=symptom_scores,
-            aptitudes=aptitude_names
+            aptitudes=formatted_aptitudes
         )
 
 

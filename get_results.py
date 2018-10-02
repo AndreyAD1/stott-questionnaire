@@ -1,5 +1,4 @@
 import json
-from collections import defaultdict
 from copy import deepcopy
 
 
@@ -52,12 +51,10 @@ def get_empty_result_dict(input_list_of_symptom_complexes):
     syndrome_dicts_list = get_list_of_syndrome_dicts(
         input_list_of_symptom_complexes
     )
-    print(syndrome_dicts_list)
     syndrome_dicts_list = add_symptom_complexes_to_syndromes(
         syndrome_dicts_list,
         input_list_of_symptom_complexes
     )
-    print(syndrome_dicts_list)
     return syndrome_dicts_list
 
 
@@ -77,10 +74,7 @@ def add_points_to_symptom_complex(
     return points_dict
 
 
-def get_points_per_symptom_complex(
-    symptom_list: list,
-    matched_symptoms: list
-) -> dict:
+def get_points_per_symptom_complex(symptom_list, matched_symptoms) -> dict:
     points_per_symptom_complex = get_empty_result_dict(symptom_list)
     for matched_symptom in matched_symptoms:
         for symptom_complex in symptom_list:
@@ -97,23 +91,11 @@ def get_points_per_symptom_complex(
     return points_per_symptom_complex
 
 
-def get_symptom_name(symptom_num, symptom_complex):
-    for symptom_features in symptom_complex['symptom_list']:
-        if symptom_num in symptom_features:
-            symptom_name = symptom_features[1]
-            return symptom_name
-    return None
-
-
-def get_aptitude_names(symptom_list, aptitude_numbers) -> list:
-    aptitude_names = []
-    for aptitude_number in aptitude_numbers:
-        for symptom_complex in symptom_list:
-            aptitude_name = get_symptom_name(aptitude_number, symptom_complex)
-            if aptitude_name:
-                aptitude_name = aptitude_name.lower()
-                aptitude_names.append(aptitude_name)
-    return aptitude_names
+def format_aptitude_names(aptitude_list):
+    formatted_names = []
+    for aptitude in aptitude_list:
+        formatted_names.append(aptitude.lower())
+    return formatted_names
 
 
 if __name__ == '__main__':
@@ -126,16 +108,8 @@ if __name__ == '__main__':
         'symptom_4_2_2_1',
         'symptom_3_1_14'
     ]
-    aptitude_list = [
-        'symptom_5_1_9',
-        'symptom_5_1_3',
-        'symptom_5_1_11',
-        'symptom_5_1_4'
-    ]
     points = get_points_per_symptom_complex(
         symptom_list,
         matched_symptoms_list
     )
-    aptitudes = get_aptitude_names(symptom_list, aptitude_list)
     print(points)
-    print(aptitudes)
