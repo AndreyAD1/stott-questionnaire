@@ -1,4 +1,5 @@
 import json
+from collections import defaultdict
 
 
 def get_symptom_complex_name(symptom_complex: dict) -> str:
@@ -20,8 +21,10 @@ def get_points_of_matched_symptom(matched_symptom, symptom_complex) -> int:
 
 
 def get_initial_dict(symptom_complexes: list) -> dict:
+    initial_dict = defaultdict(dict)
     complex_names = []
     for symptom_complex in symptom_complexes:
+        syndrome = symptom_complex['syndrome']
         complex_name = get_symptom_complex_name(symptom_complex)
         complex_names.append(complex_name)
     initial_dict = dict.fromkeys(complex_names, 0)
