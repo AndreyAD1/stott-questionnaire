@@ -9,6 +9,7 @@ from database import (
     get_aptitudes_from_database
 )
 from get_results import get_points_per_symptom_complex, format_aptitude_names
+from figure import create_figure
 
 
 FIRST_FORM_PAGE = 1
@@ -21,6 +22,8 @@ application.secret_key = 'SECRET_KEY'
 application.config.update(ENV='development', DEBUG=True)
 with open('symptoms.json', 'r', encoding='utf-8') as symptom_file:
     symptom_list = json.load(symptom_file)
+with open('aptitudes.json', 'r', encoding='utf-8') as aptitude_file:
+    aptitude_list = json.load(aptitude_file)
 
 
 @application.route('/')
@@ -57,13 +60,24 @@ def questions_and_result(number_of_symptom_complex):
         for aptitude in input_aptitudes:
             session['aptitude_list'].append(aptitude)
             session.modified = True
-    if page_number < RESULT_PAGE:
+    if page_number < FIRST_APTITUDE_PAGE:
         symptom_index = page_number - 1
         symptom_complex = symptom_list[symptom_index]
         next_page_name = page_number + 1
         return render_template(
                 '_questions.html',
                 page_content=symptom_complex,
+                page_number=page_number,
+                total_page_number=TOTAL_NUM_OF_FORM_PAGES,
+                next_page_number=next_page_name
+            )
+    if FIRST_APTITUDE_PAGE <= page_number < RESULT_PAGE:
+        next_page_name = page_number + 1
+        aptitude_page_index = page_number - FIRST_APTITUDE_PAGE
+        aptitudes = aptitude_list[aptitude_page_index]
+        return render_template(
+                '_aptitudes.html',
+                page_content=aptitudes,
                 page_number=page_number,
                 total_page_number=TOTAL_NUM_OF_FORM_PAGES,
                 next_page_number=next_page_name
@@ -88,6 +102,8 @@ def questions_and_result(number_of_symptom_complex):
             matched_symptoms
         )
         formatted_aptitudes = format_aptitude_names(matched_aptitudes)
+        print(symptom_scores)
+        create_figure(symptom_scores)
         return render_template(
             'result.html',
             symptom_scores=symptom_scores,

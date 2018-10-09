@@ -1,5 +1,6 @@
 import json
 from copy import deepcopy
+from collections import OrderedDict
 
 
 def get_symptom_complex_name(symptom_complex: dict) -> str:
@@ -20,62 +21,59 @@ def get_points_of_matched_symptom(matched_symptom, symptom_complex) -> int:
     return 0
 
 
-def get_list_of_syndrome_dicts(symptom_complexes: list) -> list:
+def get_syndrome_dict(symptom_complexes: list) -> dict:
     matched_symptoms = []
-    list_of_syndrome_dicts = []
     for symptom_complex in symptom_complexes:
         syndrome = symptom_complex['syndrome']
         if syndrome not in matched_symptoms:
             matched_symptoms.append(syndrome)
-            syndrome_dict = {syndrome: {}}
-            list_of_syndrome_dicts.append(syndrome_dict)
+    list_of_syndrome_dicts = OrderedDict.fromkeys(matched_symptoms)
     return list_of_syndrome_dicts
 
 
-def add_symptom_complexes_to_syndromes(syndrome_dicts_list, input_list_of_symptom_complexes):
-    syndrome_dicts_list = deepcopy(syndrome_dicts_list)
-    symptom_complexes_dict = None
+def add_symptom_complexes_to_syndromes(syndrome_dict, input_list_of_symptom_complexes):
+    syndrome_and_symptom_dict = deepcopy(syndrome_dict)
     for symptom_complex in input_list_of_symptom_complexes:
         syndrome_name = symptom_complex['syndrome']
-        for index, syndrome in enumerate(syndrome_dicts_list):
-            if syndrome_name in syndrome:
-                symptom_complexes_dict = syndrome[syndrome_name]
-                break
-        assert symptom_complexes_dict is not None
-        complex_name = get_symptom_complex_name(symptom_complex)
-        symptom_complexes_dict[complex_name] = 0
-    return syndrome_dicts_list
+        symptom_complex = get_symptom_complex_name(symptom_complex)
+        if syndrome_and_symptom_dict[syndrome_name] is None:
+            syndrome_and_symptom_dict[syndrome_name] = OrderedDict([(symptom_complex, 0)])
+        else:
+            syndrome_and_symptom_dict[syndrome_name][symptom_complex] = 0
+    return syndrome_and_symptom_dict
 
 
 def get_empty_result_dict(input_list_of_symptom_complexes):
-    syndrome_dicts_list = get_list_of_syndrome_dicts(
+    syndrome_dict = get_syndrome_dict(
         input_list_of_symptom_complexes
     )
-    syndrome_dicts_list = add_symptom_complexes_to_syndromes(
-        syndrome_dicts_list,
+    print(syndrome_dict)
+    syndrome_dict = add_symptom_complexes_to_syndromes(
+        syndrome_dict,
         input_list_of_symptom_complexes
     )
-    return syndrome_dicts_list
+    print(syndrome_dict)
+    return syndrome_dict
 
 
 def add_points_to_symptom_complex(
-    points_per_symptom_complex,
-    symptom_complex,
-    points
-):
+    points_per_symptom_complex: dict,
+    symptom_complex: dict,
+    points: int
+) -> dict:
     points_dict = deepcopy(points_per_symptom_complex)
     syndrome_name = symptom_complex['syndrome']
     symptom_complex_name = get_symptom_complex_name(symptom_complex)
     for syndrome in points_dict:
-        if syndrome_name in syndrome:
-            assert isinstance(syndrome[syndrome_name][symptom_complex_name], int)
-            syndrome[syndrome_name][symptom_complex_name] += points
+        if syndrome_name == syndrome:
+            assert isinstance(points_dict[syndrome_name][symptom_complex_name], int)
+            points_dict[syndrome_name][symptom_complex_name] += points
             break
     return points_dict
 
 
 def get_points_per_symptom_complex(symptom_list, matched_symptoms) -> dict:
-    points_per_symptom_complex = get_empty_result_dict(symptom_list)
+    result_dict = get_empty_result_dict(symptom_list)
     for matched_symptom in matched_symptoms:
         for symptom_complex in symptom_list:
             points = get_points_of_matched_symptom(
@@ -83,12 +81,13 @@ def get_points_per_symptom_complex(symptom_list, matched_symptoms) -> dict:
                 symptom_complex
             )
             if points:
-                points_per_symptom_complex = add_points_to_symptom_complex(
-                    points_per_symptom_complex,
+                result_dict = add_points_to_symptom_complex(
+                    result_dict,
                     symptom_complex,
                     points
                 )
-    return points_per_symptom_complex
+                break
+    return result_dict
 
 
 def format_aptitude_names(aptitude_list):
@@ -102,14 +101,16 @@ if __name__ == '__main__':
     with open('symptoms.json', 'r', encoding='utf-8') as symptom_file:
         symptom_list = json.load(symptom_file)
     matched_symptoms_list = [
-        'symptom_1_1_1_1',
-        'symptom_1_1_1_2',
-        'symptom_1_1_2_1',
-        'symptom_4_2_2_1',
-        'symptom_3_1_14'
+        'Стесняется разговаривать с учителем.',
+        'Жалуется на других детей (ябедничает).',
+        'Держится особняком, не общается с другими детьми, к нему не подойдешь.',
+        'Ломает со злостью, даже при внешне безобидных ситуациях, ручки, карандаши, линейки.',
+        'Бывают следы самопорезов на руках.',
+        'Привычка вырывать волосы (трихотилломания).',
+        'Никто не хочет с ним сидеть за одной партой, вставать в пару на прогулках экскурсиях (буллинг).',
     ]
     points = get_points_per_symptom_complex(
         symptom_list,
         matched_symptoms_list
     )
-    print(points)
+    print('Result', points)
