@@ -13,9 +13,11 @@ def get_x_coordinates_of_bars(symptoms, x_coordinate):
     return x_coordinates, x_coordinate
 
 
-def draw_bars(symptom_scores, axes):
+def draw_figure(symptom_scores, axes):
     distance_from_0x = 0
-    x_ticks_coord = []
+    x_major_tick_coords = [0]
+    x_minor_tick_coords = []
+    x_minor_tick_labels = []
     for syndrome_name, symptom_complexes_dict in symptom_scores.items():
         x_coordinates_of_bars, distance_from_0x = get_x_coordinates_of_bars(
             symptom_complexes_dict,
@@ -24,9 +26,17 @@ def draw_bars(symptom_scores, axes):
         bars_height = list(symptom_complexes_dict.values())
         axes.bar(x_coordinates_of_bars, bars_height)
         distance_from_0x += BAR_WIDTH
-        x_ticks_coord.append(distance_from_0x)
-    axes.set_xticks(x_ticks_coord)
-    axes.set_xticklabels([])
+        x_major_tick_coords.append(distance_from_0x)
+        x_minor_tick_coord = (
+            (x_major_tick_coords[-1] + x_major_tick_coords[-2]) / 2
+        )
+        x_minor_tick_coords.append(x_minor_tick_coord)
+        x_minor_tick_labels.append(syndrome_name)
+    axes.set_xticks(x_major_tick_coords, minor=False)
+    axes.set_xticks(x_minor_tick_coords, minor=True)
+    axes.set_xticklabels([], minor=False)
+    axes.set_xticklabels(x_minor_tick_labels, minor=True)
+    axes.tick_params(axis='x', which='minor', length=0)
     return
 
 
@@ -34,7 +44,7 @@ def create_figure(symptom_scores):
     print(symptom_scores)
     figure = plt.figure()
     axes = figure.add_subplot(111)
-    draw_bars(symptom_scores, axes)
+    draw_figure(symptom_scores, axes)
     plt.show()
 
 
@@ -68,7 +78,7 @@ if __name__ == "__main__":
                 [
                     ('первый симптокомплекс', 9),
                     ('второй симптокомплекс', 9),
-                    ('третий симптокомплекс', 9),
+                    ('третий симптокомплекс', 1),
                     ('четвёртый симптокомплекс', 9)
                 ]
             ))
