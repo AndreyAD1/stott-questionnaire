@@ -64,9 +64,9 @@
           <td colspan="2">Повышенная сексуальность</td>
         </tr>
         <tr>
-          <td colspan="2">{{ symptom_scores['Асоциальность, недостаток социальной нормативности']['Дисциплина, правонарушения'] }}</td>
-          <td colspan="2">{{ symptom_scores['Асоциальность, недостаток социальной нормативности']['Вредные привычки'] }}</td>
-          <td colspan="2">{{ symptom_scores['Асоциальность, недостаток социальной нормативности']['Повышенная сексуальность'] }}</td>
+          <td colspan="2">{{ symptom_scores['Асоциальность']['Дисциплина, правонарушения'] }}</td>
+          <td colspan="2">{{ symptom_scores['Асоциальность']['Вредные привычки'] }}</td>
+          <td colspan="2">{{ symptom_scores['Асоциальность']['Повышенная сексуальность'] }}</td>
         </tr>
         <tr>
           <th colspan="6">СОЦИАЛЬНЫЙ СТАТУС</th>
@@ -94,6 +94,10 @@
           {{ aptitude }}{% if not loop.last -%},{% else -%}.{% endif %}
         {% endfor %}
       {% endif %}
+    </div>
+    <div class="col-12 text-center subtitle">Балльная оценка симптокомплексов</div>
+    <div>
+      <img style="max-width: 100%;" src="data:image/png;base64,{{ image }}" />
     </div>
     <div class="col-12 text-center">
       <a class="btn btn-success btn-lg" href="/" role="button">Вернуться на главную страницу</a>

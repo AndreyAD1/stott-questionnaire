@@ -1,6 +1,7 @@
 from collections import OrderedDict
 from matplotlib import rcParams
 import matplotlib.pyplot as plt
+import io
 
 
 BAR_WIDTH = 2
@@ -84,13 +85,16 @@ def draw_legend(symptom_scores, axes):
         y -= y_gap
 
 
-def create_figure(symptom_scores):
+def get_result_figure(symptom_scores):
     figure = plt.figure(figsize=(11, 7))
     figure_axes = figure.add_subplot(211)
     legend_axes = figure.add_subplot(212)
     draw_figure(symptom_scores, figure_axes)
     draw_legend(symptom_scores, legend_axes)
-    plt.show()
+    buffer = io.BytesIO()
+    plt.savefig(buffer, format='png', dpi=400)
+    buffer.seek(0)
+    return buffer
 
 
 if __name__ == "__main__":
@@ -130,4 +134,4 @@ if __name__ == "__main__":
         ]
     )
     real_scores = OrderedDict([('Тревожность. Поведение', OrderedDict([('Тревожность по отношению к учителям', 4), ('Тревожность по отношению к родителям, неблагополучие в семье', 0), ('Тревожность по отношению к детям', 5), ('Тревожность к школьным ситуациям', 5)])), ('Агрессия', OrderedDict([('Агрессия в отношении предметов (неживое)', 0), ('Агрессия в отношении растений, животных', 1), ('Агрессия по отношению к взрослым', 4), ('Агрессия по отношению к детям', 6), ('Самоагрессия', 2), ('Признаки родительской агрессии', 0)])), ('Асоциальность', OrderedDict([('Дисциплина, правонарушения', 5), ('Вредные привычки', 9), ('Повышенная сексуальность', 0)])), ('Социальный статус', OrderedDict([('Внешний вид', 3), ('Особенности коммуникации со взрослыми', 3), ('Особенности коммуникации с детьми', 3)]))])
-    create_figure(real_scores)
+    get_result_figure(real_scores)

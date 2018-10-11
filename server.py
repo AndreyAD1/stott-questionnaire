@@ -1,3 +1,4 @@
+import base64
 from flask import render_template, request, session
 import json
 from database import (
@@ -9,7 +10,7 @@ from database import (
     get_aptitudes_from_database
 )
 from get_results import get_points_per_symptom_complex, format_aptitude_names
-from figure import create_figure
+from figure import get_result_figure
 
 
 FIRST_FORM_PAGE = 1
@@ -103,11 +104,13 @@ def questions_and_result(number_of_symptom_complex):
         )
         formatted_aptitudes = format_aptitude_names(matched_aptitudes)
         print(symptom_scores)
-        create_figure(symptom_scores)
+        image_buffer = get_result_figure(symptom_scores)
+        image_encoded = base64.b64encode((image_buffer.getvalue())).decode('utf-8')
         return render_template(
             'result.html',
             symptom_scores=symptom_scores,
-            aptitudes=formatted_aptitudes
+            aptitudes=formatted_aptitudes,
+            image=str(image_encoded)
         )
 
 
