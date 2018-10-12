@@ -1,7 +1,7 @@
 from collections import OrderedDict
+import io
 from matplotlib import rcParams
 import matplotlib.pyplot as plt
-import io
 
 
 BAR_WIDTH = 2
@@ -24,6 +24,7 @@ def get_x_coordinates_of_bars(symptoms, x_coordinate):
 def label_every_bar(axes, x_coordinates: list, bar_values: list, drawn_bar_num):
     for bar_number, (x, y) in enumerate(zip(x_coordinates, bar_values)):
         bar_label = bar_number + 1 + drawn_bar_num
+        # align label with center of bar
         if bar_label < 10:
             x += BAR_WIDTH/8
         axes.text(x, y+0.1, str(bar_label))

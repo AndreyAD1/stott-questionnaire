@@ -40,6 +40,13 @@ def person_info():
     )
 
 
+def add_checked_items_to_session(input_items: list, items_type: str):
+    for item in input_items:
+        if item not in session[items_type]:
+            session[items_type].append(item)
+            session.modified = True
+
+
 @application.route('/questions/<number_of_symptom_complex>', methods=['POST'])
 def questions_and_result(number_of_symptom_complex):
     page_number = int(number_of_symptom_complex)
@@ -53,14 +60,10 @@ def questions_and_result(number_of_symptom_complex):
         session['aptitude_list'] = []
     if FIRST_FORM_PAGE < page_number <= FIRST_APTITUDE_PAGE:
         input_symptoms = request.form.keys()
-        for input_symptom in input_symptoms:
-            session['symptom_list'].append(input_symptom)
-            session.modified = True
+        add_checked_items_to_session(input_symptoms, 'symptom_list')
     if page_number > FIRST_APTITUDE_PAGE:
         input_aptitudes = request.form.keys()
-        for aptitude in input_aptitudes:
-            session['aptitude_list'].append(aptitude)
-            session.modified = True
+        add_checked_items_to_session(input_aptitudes, 'aptitude_list')
     if page_number < FIRST_APTITUDE_PAGE:
         symptom_index = page_number - 1
         symptom_complex = symptom_list[symptom_index]
