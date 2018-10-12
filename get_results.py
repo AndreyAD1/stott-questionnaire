@@ -47,12 +47,10 @@ def get_empty_result_dict(input_list_of_symptom_complexes):
     syndrome_dict = get_syndrome_dict(
         input_list_of_symptom_complexes
     )
-    print(syndrome_dict)
     syndrome_dict = add_symptom_complexes_to_syndromes(
         syndrome_dict,
         input_list_of_symptom_complexes
     )
-    print(syndrome_dict)
     return syndrome_dict
 
 

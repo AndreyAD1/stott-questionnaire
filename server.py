@@ -1,6 +1,7 @@
 import base64
-from flask import render_template, request, session
 import json
+from flask import render_template, request, session
+from flask_wtf.csrf import CSRFProtect
 from database import (
     application,
     add_person_to_database,
@@ -20,7 +21,9 @@ RESULT_PAGE = 19
 
 
 application.secret_key = 'SECRET_KEY'
+csrf = CSRFProtect(application)
 application.config.update(ENV='development', DEBUG=True)
+
 with open('symptoms.json', 'r', encoding='utf-8') as symptom_file:
     symptom_list = json.load(symptom_file)
 with open('aptitudes.json', 'r', encoding='utf-8') as aptitude_file:
@@ -42,7 +45,7 @@ def person_info():
 
 def add_checked_items_to_session(input_items: list, items_type: str):
     for item in input_items:
-        if item not in session[items_type]:
+        if item not in session[items_type] and item != 'csrf_token':
             session[items_type].append(item)
             session.modified = True
 
@@ -109,13 +112,13 @@ def questions_and_result(number_of_symptom_complex):
             matched_symptoms
         )
         formatted_aptitudes = format_aptitude_names(matched_aptitudes)
-        image_buffer = get_result_figure(symptom_scores)
-        image_encoded = base64.b64encode((image_buffer.getvalue())).decode('utf-8')
+        buffered_image = get_result_figure(symptom_scores)
+        decoded_image = base64.b64encode((buffered_image.getvalue())).decode('utf-8')
         return render_template(
             'result.html',
             symptom_scores=symptom_scores,
             aptitudes=formatted_aptitudes,
-            image=str(image_encoded)
+            image=str(decoded_image)
         )
 
 
