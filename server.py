@@ -58,6 +58,7 @@ def questions_and_result(number_of_symptom_complex):
         session['person_info_id'] = person_info_id
         session['symptom_list'] = []
         session['aptitude_list'] = []
+        session['info_saved_in_database'] = False
     if FIRST_FORM_PAGE < page_number <= FIRST_APTITUDE_PAGE:
         input_symptoms = request.form.keys()
         add_checked_items_to_session(input_symptoms, 'symptom_list')
@@ -87,14 +88,16 @@ def questions_and_result(number_of_symptom_complex):
                 next_page_number=next_page_name
             )
     if page_number == RESULT_PAGE:
-        add_symptoms_to_database(
-            session['person_info_id'],
-            session['symptom_list']
-        )
-        add_aptitudes_to_database(
-            session['person_info_id'],
-            session['aptitude_list']
-        )
+        if not session['info_saved_in_database']:
+            add_symptoms_to_database(
+                session['person_info_id'],
+                session['symptom_list']
+            )
+            add_aptitudes_to_database(
+                session['person_info_id'],
+                session['aptitude_list']
+            )
+            session['info_saved_in_database'] = True
         matched_symptoms = get_symptoms_from_database(
             session['person_info_id']
         )
@@ -106,7 +109,6 @@ def questions_and_result(number_of_symptom_complex):
             matched_symptoms
         )
         formatted_aptitudes = format_aptitude_names(matched_aptitudes)
-        print(symptom_scores)
         image_buffer = get_result_figure(symptom_scores)
         image_encoded = base64.b64encode((image_buffer.getvalue())).decode('utf-8')
         return render_template(
