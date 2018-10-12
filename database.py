@@ -9,7 +9,7 @@ application = Flask(__name__)
 application.config[
     'SQLALCHEMY_DATABASE_URI'
 ] = 'postgresql://stott:stott@localhost/stott_questionnaire'
-application.config['SQLALCHEMY_ECHO'] = True
+application.config['SQLALCHEMY_ECHO'] = False
 db = SQLAlchemy(application)
 
 
@@ -29,6 +29,10 @@ class PersonInfo(db.Model):
     age = Column(Integer)
     sex = Column(String(10))
     grade_number = Column(Integer)
+    family_type = Column(String(50))
+    child_number = Column(Integer)
+    order_number = Column(Integer)
+    family_history = Column(String(800))
     person = relationship('Person', back_populates='person_info')
     symptoms = relationship(
         'Symptoms',
@@ -84,15 +88,13 @@ def create_database():
     db.create_all()
 
 
-def add_person_to_database(age, sex, grade_number):
+def add_person_to_database(**kwargs):
     person = Person()
     db.session.add(person)
     db.session.commit()
     person_info = PersonInfo(
         person_id=person.id,
-        age=age,
-        sex=sex,
-        grade_number=grade_number
+        **kwargs
     )
     db.session.add(person_info)
     db.session.commit()

@@ -43,6 +43,21 @@ def person_info():
     )
 
 
+def get_input_info(input_dict):
+    argument_dict = {}
+    for key, value in input_dict.items():
+        if key == 'csrf_token':
+            continue
+        if not value:
+            value = None
+            argument_dict[key] = value
+            continue
+        if key in ['age', 'grade', 'child_number', 'order_number']:
+            value = int(value)
+        argument_dict[key] = value
+    return argument_dict
+
+
 def add_checked_items_to_session(input_items: list, items_type: str):
     for item in input_items:
         if item not in session[items_type] and item != 'csrf_token':
@@ -54,10 +69,8 @@ def add_checked_items_to_session(input_items: list, items_type: str):
 def questions_and_result(number_of_symptom_complex):
     page_number = int(number_of_symptom_complex)
     if page_number == FIRST_FORM_PAGE:
-        age = int(request.form['age'])
-        sex = request.form['sex']
-        grade_number = int(request.form['grade'])
-        person_info_id = add_person_to_database(age, sex, grade_number)
+        input_info = get_input_info(request.form)
+        person_info_id = add_person_to_database(**input_info)
         session['person_info_id'] = person_info_id
         session['symptom_list'] = []
         session['aptitude_list'] = []
