@@ -92,10 +92,7 @@ def add_person_to_database(**kwargs):
     person = Person()
     db.session.add(person)
     db.session.commit()
-    person_info = PersonInfo(
-        person_id=person.id,
-        **kwargs
-    )
+    person_info = PersonInfo(person_id=person.id, **kwargs)
     db.session.add(person_info)
     db.session.commit()
     return person_info.id

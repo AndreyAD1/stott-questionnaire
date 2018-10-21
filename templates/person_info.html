@@ -145,13 +145,17 @@
       </div>
     </div>
   </div>
-<!--A script checking that order number of a child is less than entered number of children living in a family.-->
-  <!--<script>-->
-    <!--function check_child_order_number() {-->
-      <!--alert('Check!');-->
-    <!--}-->
-<!--Почитать статью "Form data validation" на developer.mozilla.org-->
-    <!--var continue_button = document.getElementById('continue-button');-->
-    <!--continue_button.addEventListener('click', check_child_order_number);-->
-  <!--</script>-->
+  <script>
+    function check_child_order_number(event, form) {
+      children_number = form.elements['child-number'];
+      child_order_number = form.elements['order-number'];
+      if (children_number.value < child_order_number.value) {
+        alert('Ошибка при заполнении формы: номер ребёнка по счёту не может быть больше количества детей в семье.')
+        event.preventDefault();
+      }
+    }
+
+    var question_form = document.getElementById('question-form');
+    question_form.addEventListener('submit', function(){check_child_order_number(event, question_form)}, false);
+  </script>
 {% endblock %}
