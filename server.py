@@ -68,11 +68,13 @@ def get_input_info(input_dict):
 
 def add_checked_items_to_session(input_items: dict, items_type: str):
     for item in input_items:
+        if item == 'csrf_token':
+            continue
         if item == 'другое':
             item = input_items[item]
             if not item:
                 continue
-        if item not in session[items_type] and item != 'csrf_token':
+        if item not in session[items_type]:
             session[items_type].append(item)
             session.modified = True
 

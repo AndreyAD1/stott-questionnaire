@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from datetime import datetime
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects import postgresql
 from flask_sqlalchemy import SQLAlchemy
@@ -16,6 +17,7 @@ db = SQLAlchemy(application)
 class Person(db.Model):
     __tablename__ = 'person'
     id = Column(Integer, primary_key=True)
+    created_at = Column(DateTime)
     person_info = relationship('PersonInfo', back_populates="person")
 
     def __repr__(self):
@@ -25,6 +27,7 @@ class Person(db.Model):
 class PersonInfo(db.Model):
     __tablename__ = 'person_info'
     id = Column(Integer, primary_key=True)
+    created_at = Column(DateTime)
     person_id = Column(Integer, ForeignKey('person.id'))
     age = Column(Integer)
     sex = Column(String(10))
@@ -57,6 +60,7 @@ class PersonInfo(db.Model):
 class Symptoms(db.Model):
     __tablename__ = 'symptoms'
     id = Column(Integer, primary_key=True)
+    created_at = Column(DateTime)
     person_info_id = Column(Integer, ForeignKey('person_info.id'))
     symptoms = Column(postgresql.ARRAY(String))
     person_info = relationship('PersonInfo', back_populates='symptoms')
@@ -89,24 +93,36 @@ def create_database():
 
 
 def add_person_to_database(**kwargs):
-    person = Person()
+    current_datetime = datetime.utcnow()
+    person = Person(created_at=current_datetime)
     db.session.add(person)
     db.session.commit()
-    person_info = PersonInfo(person_id=person.id, **kwargs)
+    person_info = PersonInfo(
+        person_id=person.id,
+        created_at=current_datetime,
+        **kwargs
+    )
     db.session.add(person_info)
     db.session.commit()
     return person_info.id
 
 
 def add_symptoms_to_database(person_info_id, symptom_list):
-    symptoms = Symptoms(person_info_id=person_info_id, symptoms=symptom_list)
+    symptoms = Symptoms(
+        person_info_id=person_info_id,
+        created_at=datetime.utcnow(),
+        symptoms=symptom_list
+    )
     db.session.add(symptoms)
     db.session.commit()
     return
 
 
 def add_aptitudes_to_database(person_info_id, aptitude_list):
-    aptitudes = Aptitudes(person_info_id=person_info_id, aptitudes=aptitude_list)
+    aptitudes = Aptitudes(
+        person_info_id=person_info_id,
+        aptitudes=aptitude_list
+    )
     db.session.add(aptitudes)
     db.session.commit()
     return
