@@ -43,6 +43,14 @@ def person_info():
     )
 
 
+@application.route('/questions/instruction')
+def instruction():
+    return render_template(
+        'instruction.html',
+        page_title='Инструкция по заполнению анкеты'
+    )
+
+
 def get_input_info(input_dict):
     argument_dict = {}
     for key, value in input_dict.items():
@@ -58,8 +66,12 @@ def get_input_info(input_dict):
     return argument_dict
 
 
-def add_checked_items_to_session(input_items: list, items_type: str):
+def add_checked_items_to_session(input_items: dict, items_type: str):
     for item in input_items:
+        if item == 'другое':
+            item = input_items[item]
+            if not item:
+                continue
         if item not in session[items_type] and item != 'csrf_token':
             session[items_type].append(item)
             session.modified = True
@@ -76,10 +88,10 @@ def questions_and_result(number_of_symptom_complex):
         session['aptitude_list'] = []
         session['info_saved_in_database'] = False
     if FIRST_FORM_PAGE < page_number <= FIRST_APTITUDE_PAGE:
-        input_symptoms = request.form.keys()
+        input_symptoms = request.form
         add_checked_items_to_session(input_symptoms, 'symptom_list')
     if page_number > FIRST_APTITUDE_PAGE:
-        input_aptitudes = request.form.keys()
+        input_aptitudes = request.form
         add_checked_items_to_session(input_aptitudes, 'aptitude_list')
     if page_number < FIRST_APTITUDE_PAGE:
         symptom_index = page_number - 1
