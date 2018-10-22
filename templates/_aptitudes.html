@@ -14,8 +14,8 @@
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
           {% for aptitude_name in page_content.aptitude_list %}
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="true" id="{{ aptitude_name }}" name="{{ aptitude_name }}">
-            <label class="form-check-label" for="{{ aptitude_name }}">
+            <input class="form-check-input" type="checkbox" value="true" id="{{ loop.index }}_aptitude" name="{{ aptitude_name }}">
+            <label class="form-check-label" for="{{ loop.index }}_aptitude">
               {{ aptitude_name }}
             </label>
           </div>
