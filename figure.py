@@ -93,7 +93,7 @@ def get_result_figure(symptom_scores):
     draw_figure(symptom_scores, figure_axes)
     draw_legend(symptom_scores, legend_axes)
     buffer = io.BytesIO()
-    plt.savefig(buffer, format='png', dpi=400)
+    plt.savefig(buffer, format='png', dpi=300)
     buffer.seek(0)
     return buffer
 
