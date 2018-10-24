@@ -4,6 +4,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.dialects import postgresql
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
+from flask_migrate import Migrate
 
 
 application = Flask(__name__)
@@ -12,6 +13,7 @@ application.config[
 ] = 'postgresql://stott:stott@localhost/stott_questionnaire'
 application.config['SQLALCHEMY_ECHO'] = False
 db = SQLAlchemy(application)
+migrate = Migrate(application, db)
 
 
 class Person(db.Model):
