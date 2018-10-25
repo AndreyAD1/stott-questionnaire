@@ -2,8 +2,8 @@ import base64
 import json
 from flask import render_template, request, session
 from flask_wtf.csrf import CSRFProtect
+from application import application
 from database import (
-    application,
     add_person_to_database,
     add_symptoms_to_database,
     add_aptitudes_to_database,
@@ -20,9 +20,8 @@ TOTAL_NUM_OF_FORM_PAGES = 18
 RESULT_PAGE = 19
 
 
-application.secret_key = 'SECRET_KEY'
 csrf = CSRFProtect(application)
-application.config.update(ENV='development', DEBUG=True)
+
 
 with open('symptoms.json', 'r', encoding='utf-8') as symptom_file:
     symptom_list = json.load(symptom_file)

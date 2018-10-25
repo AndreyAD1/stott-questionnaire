@@ -3,15 +3,10 @@ from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects import postgresql
 from flask_sqlalchemy import SQLAlchemy
-from flask import Flask
 from flask_migrate import Migrate
+from application import application
 
 
-application = Flask(__name__)
-application.config[
-    'SQLALCHEMY_DATABASE_URI'
-] = 'postgresql://stott:stott@localhost/stott_questionnaire'
-application.config['SQLALCHEMY_ECHO'] = False
 db = SQLAlchemy(application)
 migrate = Migrate(application, db)
 
