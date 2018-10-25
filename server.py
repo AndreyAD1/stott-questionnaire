@@ -12,12 +12,12 @@ from database import (
 )
 from get_results import get_points_per_symptom_complex, format_aptitude_names
 from figure import get_result_figure
-
-
-FIRST_FORM_PAGE = 1
-FIRST_APTITUDE_PAGE = 17
-TOTAL_NUM_OF_FORM_PAGES = 18
-RESULT_PAGE = 19
+from constants import (
+    FIRST_FORM_PAGE,
+    FIRST_APTITUDE_PAGE,
+    TOTAL_NUM_OF_FORM_PAGES,
+    RESULT_PAGE
+)
 
 
 csrf = CSRFProtect(application)
