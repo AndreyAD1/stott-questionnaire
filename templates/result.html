@@ -10,7 +10,11 @@
     <div class="col-12 text-center table-description">
       В таблице представлены результаты балльной оценки симптокомплексов
     </div>
-    <div class="col-12 table-responsive"><table class="table table-bordered table-sm">
+    <div class="col-12">
+      <a href="result_criteria" target="_blank">Критерии балльной оценки</a>
+    </div>
+    <div class="col-12 table-responsive">
+      <table class="table table-bordered table-sm">
         <tr>
           <th colspan="6" class="pl-auto pr-auto">
             ТРЕВОЖНОСТЬ
@@ -26,10 +30,10 @@
           <td>к родителям</td>
         </tr>
         <tr>
-          <td>{{ symptom_scores['Тревожность. Поведение']['Тревожность по отношению к учителям'] }}</td>
-          <td>{{ symptom_scores['Тревожность. Поведение']['Тревожность по отношению к родителям, неблагополучие в семье'] }}</td>
-          <td colspan="2">{{ symptom_scores['Тревожность. Поведение']['Тревожность по отношению к детям'] }}</td>
-          <td colspan="2">{{ symptom_scores['Тревожность. Поведение']['Тревожность к школьным ситуациям'] }}</td>
+          <td>{{ symptom_scores['Тревожность']['Тревожность по отношению к учителям'] }}</td>
+          <td>{{ symptom_scores['Тревожность']['Тревожность по отношению к родителям, неблагополучие в семье'] }}</td>
+          <td colspan="2">{{ symptom_scores['Тревожность']['Тревожность по отношению к детям'] }}</td>
+          <td colspan="2">{{ symptom_scores['Тревожность']['Тревожность к школьным ситуациям'] }}</td>
         </tr>
         <tr>
           <th colspan="6" class="pl-auto pr-auto">

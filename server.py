@@ -50,6 +50,14 @@ def instruction():
     )
 
 
+@application.route('/questions/result_criteria')
+def result_criteria():
+    return render_template(
+        'result_criteria.html',
+        page_title='Инструкция по заполнению анкеты'
+    )
+
+
 def _get_input_info(input_dict):
     argument_dict = {}
     for key, value in input_dict.items():
@@ -156,6 +164,14 @@ def questions_and_result(number_of_symptom_complex):
         return _get_result_page(person_info_id)
 
     return render_template('index.html', page_title='Главная')
+
+
+@application.route('/questions/result')
+def render_result_page():
+    person_info_id = session.get('person_info_id', None)
+    if person_info_id is None:
+        return render_template('index.html', page_title='Главная')
+    return _get_result_page(person_info_id)
 
 
 if __name__ == '__main__':

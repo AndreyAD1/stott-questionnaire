@@ -15,6 +15,18 @@
   font-size: 15pt;
 }
 
+.weak {
+  color: green;
+}
+
+.significant {
+  color: blue;
+}
+
+.strong {
+  color: red
+}
+
 footer {
   background: #1D3b21;
   color: #ededed;
@@ -27,8 +39,11 @@ header {
 }
 
 @media (min-height: 700px) {
-  .question-item {
-    min-height: 500px
+  .question-item{
+    min-height: 600px
+  }
+  .intro {
+    min-height:700px
   }
 }
 
