@@ -2,13 +2,7 @@ from datetime import datetime
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects import postgresql
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-from application import application
-
-
-db = SQLAlchemy(application)
-migrate = Migrate(application, db)
+from app import db
 
 
 class Person(db.Model):
