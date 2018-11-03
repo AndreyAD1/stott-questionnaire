@@ -20,13 +20,40 @@ Remember that it is recommended to use virtual environment for better isolation.
 
 ### Quick start
 
-1. Using some PostgreSQL interface create PostgreSQL user with name 'stott'
- and password 'stott'. Create PostgreSQL database named 'stott_questionnaire';
-2. Add project tables to the database 'stott_questionnaire':
+1. Set an environment variable `FLASK_APP`.
+
+    On Linux:
     ```bash
-    python database.py
+    (venv) $ export FLASK_APP=questionnaire.py
     ```
-3. Run the server on `http://127.0.0.1:5000/`:
+    On Windows:
     ```bash
-    python server.py
+    (venv) > set FLASK_APP=questionnaire.py
+    ```
+
+2. Create a database and set an environment variable `DATABASE_URL`
+(see examples of database URLs [here](https://docs.sqlalchemy.org/en/latest/core/engines.html)). 
+By default, the database url is
+`postgresql://stott:stott@localhost/stott_questionnaire`
+(username: 'stott', password: 'stott', database name: 'stott_questionnaire'.
+    On Linux:
+    ```bash
+    (venv) $ export DATABASE_URL=some_url
+    ```
+    On Windows:
+    ```bash
+    (venv) > set DATABASE_URL=some_url
+    ```
+
+3. Create the database migration script:
+    ```bash
+    $ flask db migrate 
+    ```
+4. Add tables to the database:
+    ```bash
+    $ flask db upgrade
+    ```
+4. Run the server on `http://127.0.0.1:5000/`:
+    ```bash
+    $ flask run
     ```

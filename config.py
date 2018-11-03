@@ -8,4 +8,3 @@ class Config(object):
         'DATABASE_URL'
     ) or 'postgresql://stott:stott@localhost/stott_questionnaire'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    DEVELOPMENT = True
