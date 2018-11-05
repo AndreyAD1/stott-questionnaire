@@ -16,6 +16,7 @@ numpy==1.15.2
 psycopg2==2.7.5
 pyparsing==2.2.1
 python-dateutil==2.7.3
+python-dotenv==0.9.1
 python-editor==1.0.3
 six==1.11.0
 SQLAlchemy==1.2.10
