@@ -34,7 +34,7 @@ Remember that it is recommended to use virtual environment for better isolation.
 2. Create a database and set an environment variable `DATABASE_URL`
 (see examples of database URLs [here](https://docs.sqlalchemy.org/en/latest/core/engines.html)). 
 By default, the database url is
-`postgresql://stott:stott@localhost/stott_questionnaire`
+`postgresql://stott:stott@127.0.0.1/stott_questionnaire`
 (username: 'stott', password: 'stott', database name: 'stott_questionnaire'.
     On Linux:
     ```bash
@@ -49,6 +49,8 @@ By default, the database url is
     ```bash
     $ flask db migrate 
     ```
+   You may encounter an import problem with module Tkinter. In that case you
+   should install the system package `tk-devel` and rebuild Python.
 4. Add tables to the database:
     ```bash
     $ flask db upgrade
