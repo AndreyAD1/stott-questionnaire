@@ -3,8 +3,7 @@
 This site provides psychological questionnaire helping 
 to analyze social disadaptation of teenagers.
 
-A static version of the site is here:
-https://andreyad1.github.io/stott-questionnaire/static
+The site address is http://stott-questions.com.
 
 ### How To Install
 
